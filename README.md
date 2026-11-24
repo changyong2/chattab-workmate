@@ -21,6 +21,9 @@ node test-model.cjs
 node test-insights.cjs
 node test-work-life.cjs
 node test-personal-profile.cjs
+node test-result-stories.cjs
 ```
 
 `main`은 원본과 검증을, `gh-pages`는 `dist` 정적 배포본을 보관합니다. 매칭은 워크숍 대화를 위한 참고용이며 검증된 심리검사나 업무 성과 예측이 아닙니다.
+
+개인·메이트·업무생활 결과는 그래프 앞에 응답에 근거한 해석 문장을 보여줍니다. 한쪽 경향이 불분명하거나 판단 보류가 많으면 그 한계도 함께 표시합니다.

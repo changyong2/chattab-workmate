@@ -1,4 +1,5 @@
 const assert=require('node:assert/strict');
+require('./dist/result-stories.js');
 const W=require('./dist/model.js'),A=require('./dist/answers.js'),R=require('./dist/roles.js');
 const P=require('./dist/personal-profile.js');
 const person=value=>({name:'테스트',role:'pm',scale:5,answers:Array(48).fill(value)});
