@@ -21,9 +21,9 @@ function browserContext(mode,hash,storage,search=''){
   for(const file of ['answers','model','roles','work-life-model','mixed-survey','work-life-host','insights','dashboard','result-stories','personal-profile','app'])vm.runInContext(fs.readFileSync('dist/'+file+'.js','utf8'),context,{filename:file+'.js'});
   return {context,app,elements};
 }
-const complete=browserContext('', '#complete',{'wm-participant-v7':JSON.stringify(p)});
+const complete=browserContext('', '#complete',{'wm-participant-v8':JSON.stringify(p)});
 assert(complete.app.innerHTML.includes('40문항 완료'));
-assert(complete.app.innerHTML.includes('WM7.'));assert(complete.app.innerHTML.includes('WL3.'));
+assert(complete.app.innerHTML.includes('WM8.'));assert(complete.app.innerHTML.includes('WL3.'));
 const profile=browserContext('host','#profile',{},'?sample=1');
 assert(profile.app.innerHTML.includes('채팅탭과의 궁합'));assert(profile.app.innerHTML.includes('밸런스 게임'));
 const mate=browserContext('host','#results',{},'?sample=1');
@@ -32,4 +32,13 @@ vm.runInContext('showMatch(host.people[0])',mate.context);
 assert(mate.app.innerHTML.includes('메이트 궁합률'));assert(mate.app.innerHTML.includes('밸런스 게임은 네 개 중'));
 const old={'wm-participant-v5':JSON.stringify({...p,answers:Array(48).fill(1),scale:5})};
 browserContext('', '#survey',old);assert(old['wm-participant-v5']);
-console.log('Passed: all 40 items across five pages, missing-answer guard, real completion WM7/WL3 codes, sample personal/team compatibility, mate reveal narrative and old storage preservation.');
+const prior={...p,scale:7,page:4,funAnswers:[1,0,1,0]};
+const old40Storage={'wm-participant-v7':JSON.stringify(prior)};
+const revised=browserContext('', '#survey',old40Storage);
+const migrated=vm.runInContext('participant',revised.context);
+assert.deepEqual(JSON.parse(JSON.stringify(migrated.answers)),prior.answers);
+assert.deepEqual(JSON.parse(JSON.stringify(migrated.extraAnswers)),prior.extraAnswers);
+assert.deepEqual(JSON.parse(JSON.stringify(migrated.funAnswers)),[1,0,1,null]);
+assert.equal(migrated.page,4);assert.equal(migrated.scale,8);
+assert.equal(old40Storage['wm-participant-v7'],JSON.stringify(prior));
+console.log('Passed: all 40 items across five pages, missing-answer guard, real completion WM8/WL3 codes, sample personal/team compatibility, mate reveal narrative and old storage preservation.');

@@ -341,22 +341,22 @@
   },
   {
     "id": 3,
-    "text": "다음 채팅탭 과제에서 나에게만 특수 능력 하나를 달 수 있다면? 나머지 능력은 평소 그대로다.",
+    "text": "이번 팀미팅이 끝난 뒤, 동료에게 둘 중 한마디를 들을 수 있다면 무엇이 더 좋겠나요?",
     "options": [
-      "내가 맡은 부분에서 출시 뒤 생길 문제를 미리 보기",
-      "내가 해야 할 반복 작업을 버튼 한 번으로 끝내기"
+      "“너랑 하면 복잡한 일도 풀리더라.”",
+      "“너랑 하면 어려운 얘기도 편하게 하게 돼.”"
     ],
     "labels": [
-      "내 작업 미래 문제 레이더",
-      "내 반복 작업 자동 종료 요정"
+      "복잡한 일을 풀어주는 해결 메이트",
+      "어려운 얘기도 편하게 하는 대화 메이트"
     ]
   }
 ];
   function validFun(a){return Array.isArray(a)&&a.length===4&&a.every(v=>v===0||v===1);}
-  function validProfile(p){return !!p&&typeof p.name==='string'&&p.name.trim().length>0&&p.name.length<=20&&['dev','pm','design'].includes(p.role)&&p.scale===7&&Array.isArray(p.answers)&&p.answers.length===24&&p.answers.every(a=>Number.isInteger(a)&&a>=1&&a<=4)&&validFun(p.funAnswers);}
+  function validProfile(p){return !!p&&typeof p.name==='string'&&p.name.trim().length>0&&p.name.length<=20&&['dev','pm','design'].includes(p.role)&&p.scale===8&&Array.isArray(p.answers)&&p.answers.length===24&&p.answers.every(a=>Number.isInteger(a)&&a>=1&&a<=4)&&validFun(p.funAnswers);}
   function checksum(s){let h=2166136261;for(const c of s)h=Math.imul(h^c.charCodeAt(0),16777619);return (h>>>0).toString(36);}
-  function encode(p){if(!validProfile(p))throw Error('40문항 버전의 업무 성향·밸런스 게임과 닉네임을 확인해주세요.');const raw=JSON.stringify([7,p.name.trim(),p.answers.join(''),p.role,p.funAnswers.join('')]);const b64=btoa(Array.from(new TextEncoder().encode(raw),c=>String.fromCharCode(c)).join('')).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');return `WM7.${b64}.${checksum(b64)}`;}
-  function decode(code){try{if(code.length>2000)throw 0;const [tag,b64,hash,...extra]=code.trim().split('.');if(tag!=='WM7'||extra.length||checksum(b64)!==hash)throw 0;const raw=new TextDecoder('utf-8',{fatal:true}).decode(Uint8Array.from(atob(b64.replace(/-/g,'+').replace(/_/g,'/')),c=>c.charCodeAt(0)));const [v,name,answers,role,fun]=JSON.parse(raw);if(v!==7||typeof answers!=='string'||!/^[1-4]{24}$/.test(answers)||typeof fun!=='string'||!/^[01]{4}$/.test(fun))throw 0;const p={name,answers:[...answers].map(Number),role,scale:7,funAnswers:[...fun].map(Number)};if(!validProfile(p))throw 0;return p;}catch{throw Error('40문항 버전 WM7 코드가 필요해요. 이전 문항의 코드는 함께 집계하지 않아요.');}}
+  function encode(p){if(!validProfile(p))throw Error('40문항 버전의 업무 성향·밸런스 게임과 닉네임을 확인해주세요.');const raw=JSON.stringify([8,p.name.trim(),p.answers.join(''),p.role,p.funAnswers.join('')]);const b64=btoa(Array.from(new TextEncoder().encode(raw),c=>String.fromCharCode(c)).join('')).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');return `WM8.${b64}.${checksum(b64)}`;}
+  function decode(code){try{if(code.length>2000)throw 0;const [tag,b64,hash,...extra]=code.trim().split('.');if(tag!=='WM8'||extra.length||checksum(b64)!==hash)throw 0;const raw=new TextDecoder('utf-8',{fatal:true}).decode(Uint8Array.from(atob(b64.replace(/-/g,'+').replace(/_/g,'/')),c=>c.charCodeAt(0)));const [v,name,answers,role,fun]=JSON.parse(raw);if(v!==8||typeof answers!=='string'||!/^[1-4]{24}$/.test(answers)||typeof fun!=='string'||!/^[01]{4}$/.test(fun))throw 0;const p={name,answers:[...answers].map(Number),role,scale:8,funAnswers:[...fun].map(Number)};if(!validProfile(p))throw 0;return p;}catch{throw Error('40문항 버전 WM8 코드가 필요해요. 이전 문항의 코드는 함께 집계하지 않아요.');}}
   function scores(p){if(!validProfile(p))throw Error('새 설문의 완성된 응답이 필요해요.');return dimensions.map((_,d)=>questions.filter(q=>q.dim===d).reduce((s,q)=>s+root.WorkmateAnswers.optionsFor(q).find(o=>o.id===p.answers[q.id]).point,0)/3);}
   function match(a,b){const x=scores(a),y=scores(b);const shared=x.slice(0,6).reduce((s,v,i)=>s+1-Math.abs(v-y[i])/3,0)/6;const balance=x.slice(6).reduce((s,v,i)=>s+Math.abs(v-y[i+6])/3,0)/2;return {score:Math.round(100*(.85*shared+.15*balance)),shared:Math.round(shared*100),balance:Math.round(balance*100),a:x,b:y,funSame:a.funAnswers.filter((v,i)=>v===b.funAnswers[i]).length};}
   function teamCompatibility(person,people){const others=people.filter(p=>p.name!==person.name&&validProfile(p));if(!others.length)return null;const mine=scores(person),otherScores=others.map(scores),team=dimensions.map((_,i)=>otherScores.reduce((sum,x)=>sum+x[i],0)/others.length);const fit=mine.slice(0,6).reduce((sum,x,i)=>sum+1-Math.abs(x-team[i])/3,0)/6;return {score:Math.round(fit*100),others:others.length,team,mine};}
@@ -368,7 +368,7 @@
     return {same,close:close.slice(0,Math.max(0,3-same.length)),gap:dimensions.map((d,i)=>({...d,dim:i,gap:Math.abs(m.a[i]-m.b[i])})).filter(d=>d.dim<6).sort((a,b)=>b.gap-a.gap)[0],role:dimensions.map((d,i)=>({...d,dim:i,gap:Math.abs(m.a[i]-m.b[i])})).slice(6).sort((a,b)=>b.gap-a.gap)[0]};
   }
   function answerLabel(q,value){return root.WorkmateAnswers.optionsFor(q).find(o=>o.id===value)?.text||'이전 설문의 응답';}
-  function demoPeople(){const seeds=[['모모',[1,2,3,1,3,2,1,1]],['루카',[1,2,3,1,3,2,4,4]],['누리',[4,4,1,4,2,4,4,4]],['도담',[4,4,1,4,2,4,1,1]],['보리',[2,1,4,2,4,2,1,3]],['유자',[2,1,4,2,4,2,4,1]]];return seeds.map(([name,values],i)=>({name,role:['pm','dev','design'][i%3],scale:7,funAnswers:[i%2,Math.floor(i/2)%2,(i+1)%2,Math.floor(i/3)%2],answers:questions.map(q=>Math.min(4,values[q.dim]+((q.id+i*2)%11===0?1:0)))}));}
+  function demoPeople(){const seeds=[['모모',[1,2,3,1,3,2,1,1]],['루카',[1,2,3,1,3,2,4,4]],['누리',[4,4,1,4,2,4,4,4]],['도담',[4,4,1,4,2,4,1,1]],['보리',[2,1,4,2,4,2,1,3]],['유자',[2,1,4,2,4,2,4,1]]];return seeds.map(([name,values],i)=>({name,role:['pm','dev','design'][i%3],scale:8,funAnswers:[i%2,Math.floor(i/2)%2,(i+1)%2,Math.floor(i/3)%2],answers:questions.map(q=>Math.min(4,values[q.dim]+((q.id+i*2)%11===0?1:0)))}));}
   const choices=[1,2,3,4];
   const api={dimensions,questions,values,choices,funQuestions,validFun,demoPeople,encode,decode,scores,match,teamCompatibility,ranking,evidence,answerLabel,validProfile};
   root.Workmate=api;

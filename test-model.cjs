@@ -22,9 +22,9 @@ for(const q of W.questions){
   }
 }
 assert(W.questions.some(q=>JSON.stringify(A.orderedOptions(q,123).map(o=>o.id))!=='[1,2,3,4]'));
-const a={name:'올리버 🧩',role:'pm',scale:7,funAnswers:[0,1,0,1],answers:W.questions.map(q=>q.id%4+1)};
-const b={name:'동료',role:'dev',scale:7,funAnswers:[0,1,0,1],answers:a.answers.map(v=>5-v)};
-assert(W.encode(a).startsWith('WM7.'));
+const a={name:'올리버 🧩',role:'pm',scale:8,funAnswers:[0,1,0,1],answers:W.questions.map(q=>q.id%4+1)};
+const b={name:'동료',role:'dev',scale:8,funAnswers:[0,1,0,1],answers:a.answers.map(v=>5-v)};
+assert(W.encode(a).startsWith('WM8.'));
 assert.deepEqual(W.decode(W.encode(a)),a);
 assert.throws(()=>W.decode(W.encode(a).slice(0,-1)+'!'));
 assert.throws(()=>W.encode({...a,name:''}));
@@ -59,4 +59,4 @@ assert.equal(W.teamCompatibility(a,[a]),null);
 assert.equal(W.teamCompatibility(a,[a,{...a,name:'같은 리듬'}]).score,100);
 assert.equal(W.teamCompatibility({...a,answers:Array(24).fill(1)},[{...a,answers:Array(24).fill(1)},{...a,name:'반대 리듬',answers:Array(24).fill(4)}]).score,0);
 assert(W.demoPeople().every(W.validProfile));
-console.log('Passed: 40-item schema, 3 items per dimension, role-independent matching, WM7 Unicode/tamper checks, old-code rejection, non-scoring games and leave-one-out team compatibility.');
+console.log('Passed: 40-item schema, 3 items per dimension, role-independent matching, WM8 Unicode/tamper checks, old-code rejection, non-scoring games and leave-one-out team compatibility.');

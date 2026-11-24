@@ -1,7 +1,7 @@
 const assert=require('node:assert/strict');
 const S=require('./dist/result-stories.js'),P=require('./dist/personal-profile.js');
 const W=require('./dist/model.js'),A=require('./dist/answers.js');
-const p={name:'가람',role:'pm',scale:7,funAnswers:[0,1,0,1],answers:Array(24).fill(1)};
+const p={name:'가람',role:'pm',scale:8,funAnswers:[0,1,0,1],answers:Array(24).fill(1)};
 assert(S.personal(p.name,P.analyze(p,W,A)).title.includes('맥락 없으면'));
 const varied={...p,answers:W.questions.map(q=>[1,2,4][Math.floor(q.id/8)])};
 assert(S.personal(p.name,P.analyze(varied,W,A)).title.includes('상황을 보며'));

@@ -17,7 +17,7 @@ assert(!X.complete({...answers,workPriorities:[0,0]}));
 assert(!X.complete({...answers,comment:'x'.repeat(2001)}));
 const other={...answers,workKeep:[6],workKeepOther:'기타 의견'};
 assert.equal(X.decode(X.encode({...p,answers:other})).answers.workKeepOther,'기타 의견');
-const mate={name:'별도 메이트',role:'pm',scale:7,funAnswers:[0,1,0,1],answers:Array(24).fill(1)};
+const mate={name:'별도 메이트',role:'pm',scale:8,funAnswers:[0,1,0,1],answers:Array(24).fill(1)};
 assert(!W.encode({...mate,extraAnswers:answers}).includes('WL3'));
 assert.equal(W.match(mate,{...mate,name:'동료'}).score,W.match({...mate,extraAnswers:answers},{...mate,name:'동료',extraAnswers:{}}).score);
 console.log('Passed: 40 question schema; WL3 Unicode roundtrip; no name export; tamper/range/selection validation; optional/conditional comments; separate mate scoring.');
