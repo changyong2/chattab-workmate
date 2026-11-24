@@ -19,3 +19,5 @@
 !/test-meeting-flow.cjs
 
 !/test-team-temperature.cjs
+
+!/test-result-evidence.cjs

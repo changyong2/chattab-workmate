@@ -176,6 +176,7 @@
     "hint": "실제 겪은 상황과 바라는 변화를 함께 적으면 대화하기 좋아요. 특정 사람의 이름은 적지 않아도 돼요."
   }
 ];
+  questions.forEach((q,i)=>q.surveyNumber=[3,6,9,13,16,19,23,26,29,33,36,39][i]);
   const lifeNames=questions.find(q=>q.id==='lifeRules').rows;
   const lifeDescriptions=questions.find(q=>q.id==='lifeRules').descriptions;
   function visible(q,a){return !q.conditional||Array.isArray(a.lifeRules)&&a.lifeRules.some(v=>v===1||v===2);}

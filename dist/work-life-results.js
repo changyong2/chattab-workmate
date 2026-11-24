@@ -19,6 +19,12 @@
   const workOptions=X.questions.find(q=>q.id==='workPriorities').options;
   const work=workOptions.map((name,i)=>[name,demo?[9,7,4,6,2,3,5,0,0,0][i]:real.filter(p=>p.answers.workPriorities.includes(i)).length]).sort((a,b)=>b[1]-a[1]);
   const temperature=X.temperature(demo?[3,4,4,3,2,3,4,3,2,1,3,4]:real.map(p=>p.answers.teamTemperature));
+  const aggregate=(id,selections)=>{const question=X.questions.find(q=>q.id===id);return {question,counts:question.options.map((_,i)=>selections.filter(v=>Array.isArray(v)?v.includes(i):v===i).length)};};
+  const signals={
+    workKeep:aggregate('workKeep',demo?Array.from({length:n},(_,i)=>[i%6,(i+2)%6]):real.map(p=>p.answers.workKeep)),
+    changeMethod:aggregate('changeMethod',demo?[1,1,1,1,1,1,1,0,0,2,3,5]:real.map(p=>p.answers.changeMethod)),
+    commentCount:demo?0:real.reduce((sum,p)=>sum+['lifeChangeComment','lifeKeepComment','comment'].filter(id=>typeof p.answers[id]==='string'&&p.answers[id].trim()).length,0)
+  };
   const percent=count=>n?Math.round(count/n*100):0;
   const legend=labels=>`<div class="balance-legend">${labels.map((s,i)=>`<span><i class="balance-color-${i}"></i>${s}</span>`).join('')}</div>`;
   const stack=(counts,labels)=>`<div class="balance-stack" role="img" aria-label="${counts.map((c,i)=>`${labels[i]} ${c}명 (${percent(c)}%)`).join(', ')}">${counts.map((c,i)=>c?`<span class="balance-color-${i}" style="width:${c/n*100}%" aria-hidden="true">${c>=2?percent(c)+'%':''}</span>`:'').join('')}</div>`;
@@ -46,7 +52,7 @@
     const priorityNames=X.questions.find(q=>q.id==='workPriorities').options.slice(0,7);
     const workFinding=work.filter(([name,count])=>priorityNames.includes(name)&&count>0)[0]||['선택된 공통규칙이 없어요',0];
     app.innerHTML=`<section class="page wide work-life-dashboard"><div class="eyebrow">WORK & LIFE</div><h1>잘 맞는 것, 맞춰볼 것</h1><p class="sub">업무와 생활에서 무엇을 유지하고 어디를 조정할지 함께 봐요.</p>${demo?'<div class="sample-banner">미리보기 · 가상 응답 12명으로 만든 예시입니다. 실제 수집 결과가 아니에요.</div>':`<p class="notice">등록된 업무·생활 코드 ${n}명분을 집계했어요. 메이트 코드와 별도로 취합한 결과예요.</p>`}
-      ${ResultStories.html(ResultStories.team({n,satisfaction,life,work,priorityNames:X.questions.find(q=>q.id==='workPriorities').options.slice(0,7),temperature}),esc,'우리 팀의 업무·생활을 읽어보면')}
+      ${ResultStories.html(ResultStories.team({n,satisfaction,life,work,priorityNames:X.questions.find(q=>q.id==='workPriorities').options.slice(0,7),temperature,signals}),esc,'우리 팀의 업무·생활을 읽어보면')}
       <section class="panel team-temperature"><span class="pill">의견을 말하고 도움을 청할 때의 분위기</span><h2>지금 채팅탭의 팀 온도</h2><div class="temperature-number">${temperature.degrees===null?'아직 모르는 온도':temperature.degrees+'<small>°C</small>'}</div>${temperature.degrees===null?'':`<div class="temperature-track" role="img" aria-label="평균 팀 온도 ${temperature.degrees}도"><i style="left:${5+(temperature.degrees-10)/80*90}%"></i></div><div class="bar-labels"><span>말을 꺼내기 조심스러움</span><span>서로 먼저 묻고 챙김</span></div>`}<p class="note-text">따뜻하거나 먼저 챙기는 분위기 ${temperature.warm}명 · 조심스럽거나 필요한 말 위주인 분위기 ${temperature.cold}명 · 실온 ${temperature.count-temperature.warm-temperature.cold}명 · 판단 보류 ${temperature.unknown}명</p><p class="micro">의견·도움 요청의 편안함을 고른 5개 선택지를 10·30·50·70·90°C로 바꾼 재미 척도예요. 판단 보류는 평균에서 빼고 ${temperature.count}명의 응답으로 계산했어요. 개인의 능력이나 팀 성과를 뜻하지 않아요.</p></section>
       <section aria-labelledby="findings-title"><h2 id="findings-title">먼저 이야기할 세 가지</h2><div class="finding-grid">
       <a class="panel finding-card" href="#life-balance"><span class="micro">조정·중단 의견이 가장 많아요</span><h3>${priorities[0].name}</h3><strong>${priorities[0].counts[1]+priorities[0].counts[2]}명 <small>/ ${n}명</small></strong><p>일부 조정 ${priorities[0].counts[1]}명 · 중단 ${priorities[0].counts[2]}명</p><span class="micro">유지 의견과 함께 보기 ↓</span></a>
