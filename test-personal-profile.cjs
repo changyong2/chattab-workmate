@@ -1,0 +1,18 @@
+const assert=require('node:assert/strict');
+const W=require('./dist/model.js'),A=require('./dist/answers.js'),R=require('./dist/roles.js');
+const P=require('./dist/personal-profile.js');
+const person=value=>({name:'테스트',role:'pm',scale:5,answers:Array(48).fill(value)});
+const left=P.analyze(person(1),W,A),right=P.analyze(person(4),W,A);
+assert.equal(left.length,8);
+assert(left.every(d=>d.direction==='left'&&d.leftCount===6&&d.position===0));
+assert(right.every(d=>d.direction==='right'&&d.rightCount===6&&d.position===100));
+const mixed={...person(1),answers:W.questions.map(q=>Math.floor(q.id/8)%2?4:1)};
+assert(P.analyze(mixed,W,A).every(d=>d.direction==='mixed'&&d.leftCount===3&&d.rightCount===3&&d.mean===3));
+assert.deepEqual(P.analyze({...mixed,role:'dev',extraAnswers:{workSatisfaction:0}},W,A),P.analyze(mixed,W,A));
+for(const d of left)for(const e of d.examples)assert.equal(e.option.id,1);
+assert.throws(()=>P.analyze({...person(1),answers:[1]},W,A));
+assert.throws(()=>P.analyze({...person(1),scale:4},W,A));
+const esc=s=>String(s).replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const html=P.html({...person(1),name:'<script>bad</script>'},{W,A,R,esc});
+assert(!html.includes('<script>'));assert(html.includes('&lt;script&gt;'));
+console.log('Passed: 8-dimension personal profiles, endpoints, mixed responses, actual evidence, job/work-life independence, invalid input and escaped names.');

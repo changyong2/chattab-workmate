@@ -5,6 +5,7 @@
 - 참가자 설문: `index.html#survey`. 메이트 48문항과 업무·생활 16문항을 섞어 표시합니다. 조건부 의견은 응답에 따라 생략되어 총 63~64문항입니다.
 - 코드 취합: `host.html#host`. 메이트 WM5 코드와 업무·생활 WL1 코드를 각 입력란에 등록합니다.
 - 메이트 공개: `mate-results.html#results`. 매칭에는 기존 48문항만 사용하며 직군은 점수에 반영하지 않습니다.
+- 개인 협업 성향: `mate-results.html#profile`. 전원 완료 확인 후 8가지 관점과 실제 선택한 행동을 보여줍니다. `mate-results.html?sample=1#profile`은 저장된 데이터를 바꾸지 않는 가상 미리보기입니다.
 - 업무·생활 결과: `work-life-results.html`. 만족도 균형, 생활 룰별 유지·조정·중단, 업무 기준 우선순위와 전체 문항·서술 의견을 보여줍니다.
 - 가상 결과: `work-life-results.html?sample=1`. 실제 취합과 섞이지 않는 12명 예시입니다.
 
@@ -19,6 +20,7 @@ python3 -m http.server 8766 --bind 127.0.0.1 --directory dist
 node test-model.cjs
 node test-insights.cjs
 node test-work-life.cjs
+node test-personal-profile.cjs
 ```
 
 `main`은 원본과 검증을, `gh-pages`는 `dist` 정적 배포본을 보관합니다. 매칭은 워크숍 대화를 위한 참고용이며 검증된 심리검사나 업무 성과 예측이 아닙니다.
