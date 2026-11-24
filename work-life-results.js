@@ -37,7 +37,7 @@
   }
   function render(){
     if(!n){
-      app.innerHTML=`<section class="page wide"><div class="eyebrow">WORK & LIFE</div><h1>우리의 업무·생활 방식</h1><p class="sub">만족도의 균형과 유지·변경 의견을 함께 살펴봐요.</p><section class="panel"><h2>아직 수집한 결과가 없어요</h2><p class="note-text">주최자 페이지에서 WL1 코드를 등록하면 실제 결과를 볼 수 있어요. 가상 응답으로도 미리 볼 수 있어요.</p><a class="btn primary" href="?sample=1">가상 응답 12명으로 미리보기</a></section></section>`;return;
+      app.innerHTML=`<section class="page wide"><div class="eyebrow">WORK & LIFE</div><h1>우리의 업무·생활 방식</h1><p class="sub">만족도의 균형과 유지·변경 의견을 함께 살펴봐요.</p><section class="panel"><h2>아직 수집한 결과가 없어요</h2><p class="note-text">주최자 페이지에서 WL2 코드를 등록하면 실제 결과를 볼 수 있어요. 가상 응답으로도 미리 볼 수 있어요.</p><a class="btn primary" href="?sample=1">가상 응답 12명으로 미리보기</a></section></section>`;return;
     }
     const priorities=[...life].sort((a,b)=>(b.counts[1]+b.counts[2])-(a.counts[1]+a.counts[2]));
     const preserve=[...life].sort((a,b)=>b.counts[0]-a.counts[0]);
@@ -55,4 +55,5 @@
       ${details()}<p class="micro">업무·생활 결과는 메이트 매칭과 별도로 봐요. 두 영역을 합산한 점수나 개인별 순위는 만들지 않아요.</p><a class="btn ghost small" href="work-life-results.html">실제 결과 보기</a></section>`;
   }
   render();
+  if(demo)document.querySelectorAll('nav a[href]').forEach(a=>{const href=a.getAttribute('href');if(/^mate-results\.html/.test(href))a.setAttribute('href',href.replace('.html','.html?sample=1'));});
 })();
