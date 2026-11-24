@@ -1,0 +1,10 @@
+/*
+!/.gitignore
+!/README.md
+!/test-model.cjs
+!/dist/
+/dist/*
+!/dist/*.html
+!/dist/*.js
+!/dist/*.css
+!/dist/.nojekyll
