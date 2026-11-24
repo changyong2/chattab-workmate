@@ -66,7 +66,7 @@
       ['빠진 부분을 챙겨 끝까지 연결하기','진행 중 어긋난 부분을 맞추기','함께 볼 첫 예시를 만들기','새로 같이 할 일을 열어보기']
     ]
   ];
-  function optionsFor(q){return groups[q.dim][Math.floor(q.id/8)].map((text,i)=>({id:i+1,text,point:[1.5,2.5,3.5,4.5][i]}));}
+  function optionsFor(q){return groups[q.dim][q.sourceRound].map((text,i)=>({id:i+1,text,point:[1.5,2.5,3.5,4.5][i]}));}
   function orderedOptions(q,seed){const options=optionsFor(q).map(o=>({...o}));let n=((seed>>>0)^Math.imul(q.id+1,2654435761))>>>0;for(let i=options.length-1;i>0;i--){n^=n<<13;n^=n>>>17;n^=n<<5;const j=(n>>>0)%(i+1);[options[i],options[j]]=[options[j],options[i]];}return options;}
   const api={optionsFor,orderedOptions};root.WorkmateAnswers=api;if(typeof module!=='undefined')module.exports=api;
 })(typeof window==='undefined'?globalThis:window);

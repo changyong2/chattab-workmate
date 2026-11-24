@@ -1,23 +1,23 @@
 (function(root){
   const phrases=[
-    ['맥락부터 짚고 출발하는 동료','작게 해보며 길을 찾는 동료','새로운 일을 받으면 지난 기록과 배경을 살핀 뒤 시작하는 행동을 더 골랐어요.','새로운 일을 받으면 작은 시도로 감을 잡고 다음 선택을 하는 행동을 더 골랐어요.'],
-    ['글로 생각을 연결하는 동료','대화로 생각을 풀어가는 동료','의견을 글로 정리하고 기록으로 전하는 쪽에 응답이 모였어요.','대화를 주고받으며 생각과 의견을 맞추는 쪽에 응답이 모였어요.'],
-    ['질문을 모아 깊게 맞추는 동료','짧게 자주 호흡을 맞추는 동료','진행 상황과 질문을 모아 한 번에 맞추는 행동을 더 골랐어요.','작은 변화도 짧게 자주 공유하며 맞추는 행동을 더 골랐어요.'],
-    ['순서를 세우고 움직이는 동료','상황에 맞춰 경로를 바꾸는 동료','함께 할 일과 순서를 구체적으로 정하는 쪽에 응답이 모였어요.','방향은 함께 보되 상황에 따라 할 일을 조정하는 쪽에 응답이 모였어요.'],
-    ['다듬은 안으로 대화를 여는 동료','초안부터 함께 만드는 동료','어느 정도 정리한 뒤 피드백을 구하는 행동을 더 골랐어요.','거친 초안이나 떠오른 생각부터 동료와 나누는 행동을 더 골랐어요.'],
-    ['확인할 조건부터 챙기는 동료','작게 결정하고 앞으로 가는 동료','결정 전에 조건과 영향을 더 확인하는 쪽에 응답이 모였어요.','작게 결정하고 실행 결과로 다음 선택을 이어가는 쪽에 응답이 모였어요.'],
-    ['흩어진 맥락을 정리하는 동료','새로운 가능성을 보태는 동료','협업 상황에서 구조와 맥락을 정리하는 행동을 더 골랐어요.','협업 상황에서 다른 관점과 가능성을 보태는 행동을 더 골랐어요.'],
-    ['끝까지 이어 완성하는 동료','첫 시도의 발판을 놓는 동료','일을 이어가며 빈틈을 메우고 마무리하는 행동을 더 골랐어요.','첫 안과 작은 시도로 일을 출발시키는 행동을 더 골랐어요.']
+    ['맥락 없으면 시동 안 거는 인간 내비게이션','일단 실행 버튼부터 누르는 돌격대장','새로운 일을 받으면 지난 기록과 배경을 살핀 뒤 시작하는 행동을 더 골랐어요.','새로운 일을 받으면 작은 시도로 감을 잡고 다음 선택을 하는 행동을 더 골랐어요.'],
+    ['회의도 문서 한 장으로 평정하는 기록 마법사','말하면서 답을 찾아내는 라이브 해설가','의견을 글로 정리하고 기록으로 전하는 쪽에 응답이 모였어요.','대화를 주고받으며 생각과 의견을 맞추는 쪽에 응답이 모였어요.'],
+    ['질문을 숙성시켜 한 번에 푸는 집중 장인','중간 공유가 끊기면 손이 근질거리는 중계 캐스터','진행 상황과 질문을 모아 한 번에 맞추는 행동을 더 골랐어요.','작은 변화도 짧게 자주 공유하며 맞추는 행동을 더 골랐어요.'],
+    ['계획표에 세계 평화를 담는 작전 사령관','변수가 와도 경로를 다시 찾는 현장 지휘관','함께 할 일과 순서를 구체적으로 정하는 쪽에 응답이 모였어요.','방향은 함께 보되 상황에 따라 할 일을 조정하는 쪽에 응답이 모였어요.'],
+    ['초안도 퇴고하고 보여주는 완성도 수호자','미완성도 당당히 중계하는 초안 방송국','어느 정도 정리한 뒤 피드백을 구하는 행동을 더 골랐어요.','거친 초안이나 떠오른 생각부터 동료와 나누는 행동을 더 골랐어요.'],
+    ['배포 버튼 앞에서 한 번 더 묻는 안전벨트','작게 내고 다음 판을 여는 실행 가속기','결정 전에 조건과 영향을 더 확인하는 쪽에 응답이 모였어요.','작게 결정하고 실행 결과로 다음 선택을 이어가는 쪽에 응답이 모였어요.'],
+    ['흩어진 의견을 줄 세우는 맥락 교통정리반','안건 하나에 가능성 열 개를 켜는 아이디어 발전소','협업 상황에서 구조와 맥락을 정리하는 행동을 더 골랐어요.','협업 상황에서 다른 관점과 가능성을 보태는 행동을 더 골랐어요.'],
+    ['마지막 빈틈까지 지켜내는 엔딩 수문장','아무도 안 연 문부터 여는 첫발 개척자','일을 이어가며 빈틈을 메우고 마무리하는 행동을 더 골랐어요.','첫 안과 작은 시도로 일을 출발시키는 행동을 더 골랐어요.']
   ];
   function personal(name,dims){
-    const clear=[...dims].filter(d=>d.direction!=='mixed'&&Math.max(d.leftCount,d.rightCount)>=4).sort((a,b)=>b.strength-a.strength||a.dim-b.dim),top=clear[0];
+    const clear=[...dims].filter(d=>d.direction!=='mixed'&&Math.max(d.leftCount,d.rightCount)>=2).sort((a,b)=>b.strength-a.strength||a.dim-b.dim),top=clear[0];
     if(!top)return {title:`${name}님은 상황을 보며 방식을 고르는 동료예요.`,paragraphs:['이번 응답은 한 방향으로 뚜렷하게 모이기보다, 상황에 따라 다른 행동을 고른 모습이에요. 정해진 유형 하나보다 어떤 장면에서 어떤 방식을 골랐는지 살펴보면 나를 더 잘 설명할 수 있어요.','다음 협업에서는 “이번에는 어떻게 시작하고, 언제 함께 확인하면 편할까?”부터 이야기해보세요.']};
     const say=d=>phrases[d.dim][d.direction==='left'?2:3];
-    return {title:`${name}님은 ‘${phrases[top.dim][top.direction==='left'?0:1]}’에 가까워요.`,paragraphs:[clear.slice(0,2).map(say).join(' '),`함께 일할 때는 ‘${top.name}’에 대한 기대를 먼저 나눠보세요. 내가 편한 방식과 동료가 기대하는 방식을 미리 맞춰볼 수 있어요.`]};
+    return {title:`${name}님, 당신은 ‘${phrases[top.dim][top.direction==='left'?0:1]}’!`,paragraphs:[clear.slice(0,2).map(say).join(' '),`함께 일할 때는 ‘${top.name}’에 대한 기대를 먼저 나눠보세요. 내가 편한 방식과 동료가 기대하는 방식을 미리 맞춰볼 수 있어요.`]};
   }
   function mate(person,mate,W,A,profile){
-    const a=profile.analyze(person,W,A),b=profile.analyze(mate,W,A);
-    const common=a.slice(0,6).filter((d,i)=>d.direction!=='mixed'&&d.direction===b[i].direction&&Math.max(d.leftCount,d.rightCount)>=4&&Math.max(b[i].leftCount,b[i].rightCount)>=4&&Math.abs(d.mean-b[i].mean)<=.5).sort((x,y)=>Math.abs(x.mean-b[x.dim].mean)-Math.abs(y.mean-b[y.dim].mean)||x.dim-y.dim)[0];
+    const a=profile.analyze(person,W,A),b=profile.analyze(mate,W,A),chemistry=W.match(person,mate);
+    const common=a.slice(0,6).filter((d,i)=>d.direction!=='mixed'&&d.direction===b[i].direction&&Math.max(d.leftCount,d.rightCount)>=2&&Math.max(b[i].leftCount,b[i].rightCount)>=2&&Math.abs(d.mean-b[i].mean)<=.5).sort((x,y)=>Math.abs(x.mean-b[x.dim].mean)-Math.abs(y.mean-b[y.dim].mean)||x.dim-y.dim)[0];
     const gap=a.slice(0,6).map((d,i)=>({a:d,b:b[i],gap:Math.abs(d.mean-b[i].mean)})).sort((x,y)=>y.gap-x.gap||x.a.dim-y.a.dim)[0];
     const paragraphs=[];
     if(common)paragraphs.push(`두 분은 ‘${common.name}’에서 ‘${common.label}’ 쪽 행동을 함께 더 골랐어요. 일을 시작하기 전부터 맞춰볼 수 있는 공통점이에요.`);
@@ -26,7 +26,7 @@
     else paragraphs.push('여섯 가지 협업 리듬에서 두 분의 응답 차이는 모두 1점 미만이에요. 같은 선택에도 이유는 다를 수 있으니, 최근 실제 사례 하나씩을 이야기해보세요.');
     const role=a.slice(6).find(d=>d.direction!=='mixed'&&b[d.dim].direction!=='mixed'&&d.direction!==b[d.dim].direction);
     if(role)paragraphs.push(`‘${role.name}’에서는 ‘${role.label}’와 ‘${b[role.dim].label}’로 방향이 달랐어요. 서로 맡고 싶은 구간을 나눠볼 단서가 될 수 있어요.`);
-    return {title:common?'함께 고른 리듬에서 시작해, 다른 기대를 맞춰볼 조합이에요.':'서로의 방식을 먼저 알아가면 좋을 조합이에요.',paragraphs};
+    paragraphs.push(`밸런스 게임은 네 개 중 ${chemistry.funSame}개가 같아요. ${chemistry.funSame>=3?'회의가 끝나도 할 얘기가 남을 취향 동맹!':'다른 선택의 이유를 듣는 것부터 이미 팀미팅 안건이에요.'} 이 보너스 취향은 궁합률에 더하지 않았어요.`);return {title:chemistry.score>=85?'눈빛으로 다음 액션까지 통할 것 같은 업무 듀오!':chemistry.score>=65?'닮은 리듬에 다른 한 스푼, 합 맞춰볼 맛 나는 듀오!':'자동 찰떡은 아니지만, 서로 번역기를 맞춰볼 듀오!',paragraphs};
   }
   function team({n,satisfaction,life,work,priorityNames}){
     if(!n)return null;
@@ -43,7 +43,7 @@
     if(keep?.counts[0])paragraphs.push(`생활에서는 ‘${keep.name}’의 유지 의견이 ${keep.counts[0]}명으로 가장 많았어요${life.filter(x=>x.counts[0]===keep.counts[0]).length>1?'(공동 최다)':''}.`);
     if(hasChange)paragraphs.push(`한편 ‘${change.name}’는 일부 조정 ${change.counts[1]}명, 중단 ${change.counts[2]}명으로 변경 의견이 가장 많았어요${life.filter(x=>x.counts[1]+x.counts[2]===change.counts[1]+change.counts[2]).length>1?'(공동 최다)':''}. ‘없애기’로 묶기 전에 어떤 부분을 바꾸고 싶은지부터 확인해보세요.`);
     else paragraphs.push('생활 룰에는 조정·중단 의견이 없었어요. 유지와 판단 보류의 비율을 구분해서 읽어주세요.');
-    return {title:hasChange?'이어갈 방식은 지키고, 조정할 지점부터 함께 골라볼 때예요.':'생활 룰의 변경 요구보다 현재 방식을 어떻게 보는지 살펴볼 때예요.',paragraphs};
+    return {title:lead&&hasChange?'업무의 기준은 맞추고, 생활 룰은 필요한 곳만 수리할 타이밍!':hasChange?'팀 생활, 전면 공사보다 불편한 부분부터 리모델링!':'일단 현행 유지파? 판단 보류표까지 열어보고 이야기해요.',paragraphs};
   }
   function html(story,esc,label='결과를 문장으로 읽으면'){
     if(!story)return '';

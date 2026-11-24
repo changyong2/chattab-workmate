@@ -1,12 +1,12 @@
 const assert=require('node:assert/strict');
 const S=require('./dist/result-stories.js'),P=require('./dist/personal-profile.js');
 const W=require('./dist/model.js'),A=require('./dist/answers.js');
-const p={name:'가람',role:'pm',scale:5,answers:Array(48).fill(1)};
-assert(S.personal(p.name,P.analyze(p,W,A)).title.includes('맥락부터'));
-const varied={...p,answers:W.questions.map(q=>Math.floor(q.id/8)%2?4:1)};
+const p={name:'가람',role:'pm',scale:6,funAnswers:[0,1,0,1],answers:Array(24).fill(1)};
+assert(S.personal(p.name,P.analyze(p,W,A)).title.includes('맥락 없으면'));
+const varied={...p,answers:W.questions.map(q=>[1,2,4][Math.floor(q.id/8)])};
 assert(S.personal(p.name,P.analyze(varied,W,A)).title.includes('상황을 보며'));
 assert(S.mate(p,{...p,name:'나래'},W,A,P).paragraphs[0].includes('함께 더 골랐어요'));
-assert(S.mate(p,{...p,name:'나래',answers:Array(48).fill(4)},W,A,P).paragraphs.some(s=>s.includes('가장 먼저 맞춰볼')));
+assert(S.mate(p,{...p,name:'나래',answers:Array(24).fill(4)},W,A,P).paragraphs.some(s=>s.includes('가장 먼저 맞춰볼')));
 assert.equal(S.team({n:0}),null);
 const data={n:4,satisfaction:{work:[6,6,6,6],life:[3,3,3,3]},life:[{name:'팀 점심',counts:[0,0,0,4]}],work:[['잘 모르겠어요',4],['급건 기준',0]],priorityNames:['급건 기준']};
 const unknown=S.team(data);

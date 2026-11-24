@@ -2,15 +2,15 @@ const assert=require('node:assert/strict');
 const A=require('./dist/answers.js');
 const W=require('./dist/model.js');
 const {summarize}=require('./dist/insights.js');
-const person=(name,answer,extra={})=>({name,role:'pm',scale:5,answers:Array(48).fill(answer),...extra});
+const person=(name,answer,extra={})=>({name,role:'pm',scale:6,funAnswers:[0,1,0,1],answers:Array(24).fill(answer),...extra});
 assert.equal(summarize([],W,A).questions[0].share,0);
 assert.equal(summarize([person('a',1)],W,A).consensus.length,0);
 const consensus=summarize([person('a',1),person('b',1),person('c',1),person('d',2)],W,A);
-assert.equal(consensus.consensus.length,48);
+assert.equal(consensus.consensus.length,24);
 assert.equal(consensus.questions[0].ranked[0].count,3);
 assert.equal(consensus.questions[0].share,.75);
 const divided=summarize([person('a',1),person('b',1),person('c',4),person('d',4)],W,A);
-assert.equal(divided.divided.length,48);
+assert.equal(divided.divided.length,24);
 assert.equal(divided.consensus.length,0);
 const even=summarize([1,2,3,4].map((a,i)=>person('p'+i,a)),W,A);
 assert.equal(even.divided.length,0);
@@ -19,5 +19,5 @@ const mixed=summarize([person('a',1),person('b',2,{scale:4}),person('invalid',5)
 assert.equal(mixed.n,1);assert.equal(mixed.excluded,2);
 assert.equal(mixed.questions[0].ranked.reduce((n,o)=>n+o.count,0),1);
 // Direction/ordinal values never determine whether two actions form two large groups.
-assert.equal(summarize([1,1,2,2].map((a,i)=>person('p'+i,a)),W,A).divided.length,48);
+assert.equal(summarize([1,1,2,2].map((a,i)=>person('p'+i,a)),W,A).divided.length,24);
 console.log('Passed: empty/small samples, consensus, divided groups, four-way spread, legacy exclusion and denominators.');

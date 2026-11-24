@@ -2,8 +2,8 @@ const assert=require('node:assert/strict');
 const A=require('./dist/answers.js');
 const W=require('./dist/model.js');
 const R=require('./dist/roles.js');
-assert.equal(W.questions.length,48);
-for(let d=0;d<8;d++)assert.equal(W.questions.filter(q=>q.dim===d).length,6);
+assert.equal(W.questions.length,24);
+for(let d=0;d<8;d++)assert.equal(W.questions.filter(q=>q.dim===d).length,3);
 for(const value of W.values)assert(W.questions.some(q=>q.value===value.id));
 for(const q of W.questions){
   const original=A.optionsFor(q);
@@ -22,13 +22,13 @@ for(const q of W.questions){
   }
 }
 assert(W.questions.some(q=>JSON.stringify(A.orderedOptions(q,123).map(o=>o.id))!=='[1,2,3,4]'));
-const a={name:'올리버 🧩',role:'pm',scale:5,answers:W.questions.map(q=>q.id%4+1)};
-const b={name:'동료',role:'dev',scale:5,answers:a.answers.map(v=>5-v)};
-assert(W.encode(a).startsWith('WM5.'));
+const a={name:'올리버 🧩',role:'pm',scale:6,funAnswers:[0,1,0,1],answers:W.questions.map(q=>q.id%4+1)};
+const b={name:'동료',role:'dev',scale:6,funAnswers:[0,1,0,1],answers:a.answers.map(v=>5-v)};
+assert(W.encode(a).startsWith('WM6.'));
 assert.deepEqual(W.decode(W.encode(a)),a);
 assert.throws(()=>W.decode(W.encode(a).slice(0,-1)+'!'));
 assert.throws(()=>W.encode({...a,name:''}));
-assert.throws(()=>W.encode({...a,answers:Array(48).fill(5)}));
+assert.throws(()=>W.encode({...a,answers:Array(24).fill(5)}));
 assert.throws(()=>W.encode({...a,role:'invented-role'}));
 assert.equal(W.match(a,b).score,W.match(b,a).score);
 assert(W.match(a,b).score>=0&&W.match(a,b).score<=100);
@@ -44,9 +44,19 @@ for(const role of R.roles){
 }
 const e=W.evidence(a,same);assert.equal(e.same.length,3);
 for(const q of e.same){assert.equal(a.answers[q.id],same.answers[q.id]);assert.equal(W.answerLabel(q,a.answers[q.id]),A.optionsFor(q).find(o=>o.id===a.answers[q.id]).text);}
-for(const legacy of [
- {name:'기존',answers:Array(48).fill(3)},
- {name:'기존',role:'pm',answers:Array(48).fill(3)},
- {name:'기존',role:'pm',scale:4,answers:Array(48).fill(2)}
-])assert.deepEqual(W.decode(W.encode(legacy)),legacy);
-console.log('Passed: 48 questions / 192 distinct actions; all 3 jobs; stable shuffled choices; WM5 Unicode roundtrip and tamper checks; legacy decoding; position-independent IDs; symmetric, job-independent matching; evidence points to actual selected action.');
+assert.throws(()=>W.decode('WM5.old.hash'));
+assert.throws(()=>W.encode({...a,funAnswers:[0,1]}));
+assert.throws(()=>W.encode({...a,funAnswers:[0,1,0,3]}));
+assert.equal(W.questions.length+W.funQuestions.length+require('./dist/work-life-model.js').questions.length,40);
+const opposite={...a,name:'역할 반대',answers:W.questions.map(q=>q.dim<6?a.answers[q.id]:5-a.answers[q.id])};
+assert.equal(W.match({...a,answers:Array(24).fill(1)},{...a,name:'반대',answers:W.questions.map(q=>q.dim<6?1:4)}).score,100);
+const funChanged={...a,funAnswers:a.funAnswers.map(v=>1-v)};
+assert.deepEqual(W.scores(a),W.scores(funChanged));
+assert.equal(W.match(a,b).score,W.match(funChanged,b).score);
+assert.equal(W.match(a,{...a,name:'같은 취향'}).funSame,4);
+assert.equal(W.match(a,{...funChanged,name:'다른 취향'}).funSame,0);
+assert.equal(W.teamCompatibility(a,[a]),null);
+assert.equal(W.teamCompatibility(a,[a,{...a,name:'같은 리듬'}]).score,100);
+assert.equal(W.teamCompatibility({...a,answers:Array(24).fill(1)},[{...a,answers:Array(24).fill(1)},{...a,name:'반대 리듬',answers:Array(24).fill(4)}]).score,0);
+assert(W.demoPeople().every(W.validProfile));
+console.log('Passed: 40-item schema, 3 items per dimension, role-independent matching, WM6 Unicode/tamper checks, old-code rejection, non-scoring games and leave-one-out team compatibility.');
