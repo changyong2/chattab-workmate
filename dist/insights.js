@@ -1,6 +1,6 @@
 (function(root){
   function summarize(people,model,answers){
-    const included=people.filter(p=>p.scale===6&&model.validProfile(p));
+    const included=people.filter(p=>p.scale===7&&model.validProfile(p));
     const questions=model.questions.map(q=>{
       const options=answers.optionsFor(q).map(o=>({...o,count:0}));
       for(const p of included)options.find(o=>o.id===p.answers[q.id]).count++;

@@ -17,3 +17,5 @@
 !/test-result-stories.cjs
 
 !/test-meeting-flow.cjs
+
+!/test-team-temperature.cjs

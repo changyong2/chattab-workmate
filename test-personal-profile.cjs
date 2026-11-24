@@ -2,7 +2,7 @@ const assert=require('node:assert/strict');
 require('./dist/result-stories.js');
 const W=require('./dist/model.js'),A=require('./dist/answers.js'),R=require('./dist/roles.js');
 const P=require('./dist/personal-profile.js');
-const person=value=>({name:'테스트',role:'pm',scale:6,funAnswers:[0,1,0,1],answers:Array(24).fill(value)});
+const person=value=>({name:'테스트',role:'pm',scale:7,funAnswers:[0,1,0,1],answers:Array(24).fill(value)});
 const left=P.analyze(person(1),W,A),right=P.analyze(person(4),W,A);
 assert.equal(left.length,8);
 assert(left.every(d=>d.direction==='left'&&d.leftCount===3&&d.position===0));

@@ -1,6 +1,6 @@
 (function(root){
   function analyze(person,W,A){
-    if(!W.validProfile(person)||person.scale!==6)throw Error('현재 메이트 설문 24문항이 필요해요.');
+    if(!W.validProfile(person)||person.scale!==7)throw Error('현재 메이트 설문 24문항이 필요해요.');
     return W.dimensions.map((d,dim)=>{
       const evidence=W.questions.filter(q=>q.dim===dim).map(q=>({q,option:A.optionsFor(q).find(o=>o.id===person.answers[q.id])}));
       const mean=evidence.reduce((sum,x)=>sum+x.option.point,0)/evidence.length;

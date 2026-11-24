@@ -2,7 +2,7 @@ const assert=require('node:assert/strict');
 const A=require('./dist/answers.js');
 const W=require('./dist/model.js');
 const {summarize}=require('./dist/insights.js');
-const person=(name,answer,extra={})=>({name,role:'pm',scale:6,funAnswers:[0,1,0,1],answers:Array(24).fill(answer),...extra});
+const person=(name,answer,extra={})=>({name,role:'pm',scale:7,funAnswers:[0,1,0,1],answers:Array(24).fill(answer),...extra});
 assert.equal(summarize([],W,A).questions[0].share,0);
 assert.equal(summarize([person('a',1)],W,A).consensus.length,0);
 const consensus=summarize([person('a',1),person('b',1),person('c',1),person('d',2)],W,A);
