@@ -28,18 +28,24 @@
     if(role)paragraphs.push(`‘${role.name}’에서는 ‘${role.label}’와 ‘${b[role.dim].label}’로 방향이 달랐어요. 서로 맡고 싶은 구간을 나눠볼 단서가 될 수 있어요.`);
     paragraphs.push(`밸런스 게임은 네 개 중 ${chemistry.funSame}개가 같아요. ${chemistry.funSame>=3?'회의가 끝나도 할 얘기가 남을 취향 동맹!':'다른 선택의 이유를 듣는 것부터 이미 팀미팅 안건이에요.'} 이 보너스 취향은 궁합률에 더하지 않았어요.`);return {title:chemistry.score>=85?'눈빛으로 다음 액션까지 통할 것 같은 업무 듀오!':chemistry.score>=65?'닮은 리듬에 다른 한 스푼, 합 맞춰볼 맛 나는 듀오!':'자동 찰떡은 아니지만, 서로 번역기를 맞춰볼 듀오!',paragraphs};
   }
-  function team({n,satisfaction,life,work,priorityNames}){
+  function team({n,satisfaction,life,work,priorityNames,temperature}){
     if(!n)return null;
     const paragraphs=[];
-    for(const [key,title] of [['work','일하는 방식'],['life','팀 생활']]){
+    if(temperature){
+      if(temperature.degrees===null)paragraphs.push('팀 온도는 아직 판단을 보류한 응답뿐이에요. 서로를 알아갈 시간이 더 필요할 수 있어요.');
+      else if(temperature.warm>temperature.count/2)paragraphs.push(`채팅탭의 팀 온도는 ${temperature.degrees}°C예요. 응답한 ${temperature.count}명 중 ${temperature.warm}명이 의견과 도움 요청을 편하게 꺼내거나 서로 먼저 챙기는 분위기를 골랐어요. 이 온기를 유지할 작은 습관을 찾아보면 좋겠어요.`);
+      else if(temperature.cold>temperature.count/2)paragraphs.push(`채팅탭의 팀 온도는 ${temperature.degrees}°C예요. 응답한 ${temperature.count}명 중 ${temperature.cold}명이 말을 꺼내기 조심스럽거나 필요한 말 위주로 한다고 답했어요. 이번 팀미팅에서는 결론보다 각자의 이야기를 듣는 시간을 먼저 가져보면 좋겠어요.`);
+      else paragraphs.push(`채팅탭의 팀 온도는 ${temperature.degrees}°C예요. 편하게 느끼는 정도가 한쪽으로 모이지 않았어요. 평균 온도 하나로 팀을 단정하기보다 어떤 상황에서 말하기 편하거나 어려운지 나눠보세요.`);
+    }
+    for(const [key,title] of [['work','회의·협의를 거쳐 업무를 진행하는 과정'],['life','회식·점심 등 함께 지내는 운영 방식']]){
       const values=satisfaction[key],yes=values.filter(v=>v===4||v===5).length,no=values.filter(v=>v===1||v===2).length,unknown=values.filter(v=>v===6).length;
-      paragraphs.push(yes>n/2?`${title}은 만족한다는 응답이 ${n}명 중 ${yes}명으로 과반이에요.`:no>n/2?`${title}은 불만족 응답이 ${n}명 중 ${no}명으로 과반이에요. 불편했던 장면부터 함께 짚어보면 좋겠어요.`:unknown>=n/2?`${title}은 판단을 보류한 응답이 ${n}명 중 ${unknown}명이에요. 지금 자료만으로 만족도를 한쪽으로 정리하기는 어려워요.`:`${title}은 만족과 불만 중 어느 쪽도 과반이 아니에요. 하나의 평가로 묶기보다 응답의 분포를 함께 살펴보세요.`);
+      paragraphs.push(yes>n/2?`${title}은 편하다는 응답이 ${n}명 중 ${yes}명으로 과반이에요.`:no>n/2?`${title}은 불편하다는 응답이 ${n}명 중 ${no}명으로 과반이에요. 불편했던 장면부터 함께 짚어보면 좋겠어요.`:unknown>=n/2?`${title}은 판단을 보류한 응답이 ${n}명 중 ${unknown}명이에요. 지금 자료만으로 편안함을 한쪽으로 정리하기는 어려워요.`:`${title}은 편하다와 불편하다 중 어느 쪽도 과반이 아니에요. 하나의 평가로 묶기보다 응답의 분포를 함께 살펴보세요.`);
     }
     const change=[...life].sort((a,b)=>b.counts[1]+b.counts[2]-a.counts[1]-a.counts[2])[0],keep=[...life].sort((a,b)=>b.counts[0]-a.counts[0])[0];
     const hasChange=change&&change.counts[1]+change.counts[2]>0;
     const lead=work.filter(([name,count])=>priorityNames.includes(name)&&count>0).sort((a,b)=>b[1]-a[1])[0];
-    if(lead)paragraphs.push(`업무에서는 ‘${lead[0]}’에 공통 기준이 필요하다는 응답이 ${lead[1]}명으로 가장 많았어요${work.filter(([name,count])=>priorityNames.includes(name)&&count===lead[1]).length>1?'(공동 최다)':''}. 다음 회고에서 이 항목을 구체적인 약속으로 바꿔보면 좋겠어요.`);
-    else paragraphs.push('업무의 구체적인 개선 항목에 표가 모이지 않았어요. “지금도 충분하다”와 “잘 모르겠다”를 구분해 아래 응답을 확인해보세요.');
+    if(lead)paragraphs.push(`업무에서는 ‘${lead[0]}’를 새 팀의 공통규칙으로 고른 응답이 ${lead[1]}명으로 가장 많았어요${work.filter(([name,count])=>priorityNames.includes(name)&&count===lead[1]).length>1?'(공동 최다)':''}. 지금 채팅탭에서도 지킬 규칙으로 삼을지 이야기해보면 좋겠어요.`);
+    else paragraphs.push('팀의 구체적인 공통규칙에 표가 모이지 않았어요. “공통규칙을 따로 두고 싶지 않다”와 “잘 모르겠다”를 구분해 아래 응답을 확인해보세요.');
     if(keep?.counts[0])paragraphs.push(`생활에서는 ‘${keep.name}’의 유지 의견이 ${keep.counts[0]}명으로 가장 많았어요${life.filter(x=>x.counts[0]===keep.counts[0]).length>1?'(공동 최다)':''}.`);
     if(hasChange)paragraphs.push(`한편 ‘${change.name}’는 일부 조정 ${change.counts[1]}명, 중단 ${change.counts[2]}명으로 변경 의견이 가장 많았어요${life.filter(x=>x.counts[1]+x.counts[2]===change.counts[1]+change.counts[2]).length>1?'(공동 최다)':''}. ‘없애기’로 묶기 전에 어떤 부분을 바꾸고 싶은지부터 확인해보세요.`);
     else paragraphs.push('생활 룰에는 조정·중단 의견이 없었어요. 유지와 판단 보류의 비율을 구분해서 읽어주세요.');
